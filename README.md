@@ -1,3 +1,4 @@
+## Melopedia
 App for music lovers.
 Add all your artists, sort them and rate them.
 
