@@ -2,6 +2,8 @@
 App for music lovers.
 Add all your artists, sort them and rate them.
 
+See [screenshots](/screenshots) folder
+
 ## Why ?
 Since I listen music via streaming, I discovered lot of new good stuff and I a bit forgot my local music.
 Streaming apps does not have all music and the artists management is not enought mature for the moment, so I needed something where I can view all my music library, rate it, explore it and sort it.
