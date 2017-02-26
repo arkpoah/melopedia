@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<script type="text/javascript">
+{% for album in albums %}
+$(function () {
+    $("#rateYo{{album.id}}").rateYo({
+        rating: {{album.rate or 0}},
+        starWidth: "25px",
+        numStars: 10,
+        maxValue: 10,
+        halfStar: true,
+        onSet: function (rating, rateYoInstance) {
+            $.getJSON($SCRIPT_ROOT + '/_rate', {
+                type: 'album',
+                id: {{album.id}},
+                note: rating
+            }, function(data) {
+                $.notify({
+                    message : "Rate " + rating + " saved for " + '{{album.name}}' + " album !",
+                },{
+                    type: "success",
+                    delay: 1000,
+                    allow_dismiss: false,
+                    offset: 100
+                });
+            });
+            return false;
+        }
+    });
+});
+{% endfor %}
+$(function () {
+    $("#rateYo0{{artist.id}}").rateYo({
+        rating: {{artist.rate or 0}},
+        starWidth: "25px",
+        numStars: 10,
+        maxValue: 10,
+        halfStar: true,
+        onSet: function (rating, rateYoInstance) {
+            $.getJSON($SCRIPT_ROOT + '/_rate', {
+                type: 'artist',
+                id: {{artist.id}},
+                note: rating
+            }, function(data) {
+                $.notify({
+                    message : "Rate " + rating + " saved for " + '{{artist.name}}' + " !",
+                },{
+                    type: "success",
+                    delay: 1000,
+                    allow_dismiss: false,
+                    offset: 100
+                });
+            });
+            return false;
+        }
+    });
+});
+
+</script>
+<div id="artist" class="row">
+    <div class="col-sm-12 page-header">
+        <div class="row">
+            <div class="col-md-12 text-right"><a href='/admin/artist/edit/?url=%2Fadmin%2Fartist%2F&id={{artist.id}}' target='_blank'><span class='glyphicon glyphicon-edit'></span></a></div>
+            <div class="col-md-8 text-center">
+                <h1>{{artist.name}} {% if artist.year %}-{% endif %} {{artist.year or ''}}</h1>
+            </div>
+            <div class="col-md-4">
+                <img src="{{artist.get_larger_img()}}" class="img-circle img-responsive" width='125' />
+            </div>
+        </div>
+        <div class='rating'>
+           <div id="rateYo0{{artist.id}}"></div>
+        </div>
+        <div class="tagcloud">
+            <ul>
+                {% for t in tags %}
+                <li><a href="/tag/{{t.slug}}">{{t.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if artist.description %}<h3>Last.fm description</h3>
+        <p>{{artist.description|safe}}</p><hr />{% endif %}
+        {% if artist.own_description %}<h3>My notes</h3>
+        <p>{{artist.own_description|safe}}</p><hr />{% endif %}
+
+        <h3>Albums</h3>
+        <div class='row'>
+            {% for album in albums %}
+            <div class='col-md-4'>
+                <div class='well'>
+                    <a href=/album/{{album.id}}>{{album.name}}</a> {{album.year or ''}}
+                    <div class='rating'>
+                        <div id="rateYo{{album.id}}"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
